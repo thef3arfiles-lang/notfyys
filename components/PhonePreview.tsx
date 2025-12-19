@@ -24,7 +24,7 @@ const PhonePreview: React.FC<PhonePreviewProps> = ({ appState }) => {
   const { wallpaper, notifications, currentTime, fontSettings, aestheticSettings } = appState;
 
   const formattedDate = useMemo(() => {
-    return currentTime.toLocaleDateString('pt-BR', { 
+    return currentTime.toLocaleDateString('en-US', { 
       weekday: 'long', 
       day: 'numeric', 
       month: 'long' 
@@ -69,7 +69,7 @@ const PhonePreview: React.FC<PhonePreviewProps> = ({ appState }) => {
         <div className="relative z-10 flex flex-col h-full pt-20 px-3 pb-10">
           {/* Clock & Date */}
           <div className="flex flex-col items-center mb-8">
-            <div className="text-white text-[19px] font-semibold drop-shadow-md mb-2 capitalize tracking-tight">
+            <div className="text-white text-[19px] font-semibold drop-shadow-md mb-2 tracking-tight">
               {formattedDate}
             </div>
             <h1 

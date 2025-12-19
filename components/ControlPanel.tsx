@@ -23,7 +23,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
       try {
         setLibrary(JSON.parse(saved));
       } catch (e) {
-        console.error("Failed to parse library", e);
+        console.error("Failed to load gallery", e);
       }
     }
   }, []);
@@ -82,7 +82,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
     const newNotif: NotificationData = {
       id: Date.now().toString(),
       appName: 'Instagram',
-      message: 'New notification content',
+      message: 'New notification',
       timeAgo: 'now',
       icon: SOCIAL_PRESETS[0].icon,
       isContact: false,
@@ -130,7 +130,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
       <div className="px-8 py-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Smartphone className="w-6 h-6 text-blue-600" />
-          <h1 className="text-xl font-black tracking-tighter text-slate-900 uppercase">IOS MAKER</h1>
+          <h1 className="text-xl font-black tracking-tighter text-slate-900 uppercase">IOS CREATOR</h1>
         </div>
         <button 
           onClick={toggleDarkMode}
@@ -149,7 +149,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
           className="w-full bg-black text-white py-5 rounded-2xl flex items-center justify-center gap-3 font-black text-sm tracking-widest hover:bg-slate-800 transition-all active:scale-[0.98] shadow-xl"
         >
           {isDownloading ? <span className="animate-spin text-lg">◌</span> : <Download className="w-5 h-5" />}
-          DOWNLOAD PNG
+          DOWNLOAD IMAGE
         </button>
 
         {/* Section: Appearance */}
@@ -157,7 +157,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
           <h2 className="text-[11px] font-black tracking-[0.2em] text-slate-400 uppercase mb-6">Appearance</h2>
           <div className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100">
             <div className="flex justify-between items-center mb-4">
-              <label className="text-[10px] font-black uppercase text-slate-500">Card Opacity</label>
+              <label className="text-[10px] font-black uppercase text-slate-500">Opacity</label>
               <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">{appState.aestheticSettings.cardOpacity}%</span>
             </div>
             <input 
@@ -182,20 +182,20 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                   onChange={(e) => setAppState(prev => ({ ...prev, fontSettings: { ...prev.fontSettings, clockWeight: e.target.value as FontWeight }}))}
                   className="w-full bg-slate-50 border border-slate-100 p-4 rounded-2xl text-sm font-bold appearance-none outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
-                  {FONT_WEIGHT_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label.split(' ')[0]}</option>)}
+                  {FONT_WEIGHT_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                 </select>
                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Text Weight</label>
+              <label className="text-[10px] font-black uppercase text-slate-400 ml-1">Notif. Weight</label>
               <div className="relative">
                 <select 
                   value={appState.fontSettings.notificationWeight}
                   onChange={(e) => setAppState(prev => ({ ...prev, fontSettings: { ...prev.fontSettings, notificationWeight: e.target.value as FontWeight }}))}
                   className="w-full bg-slate-50 border border-slate-100 p-4 rounded-2xl text-sm font-bold appearance-none outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
-                  {FONT_WEIGHT_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label.split(' ')[0]}</option>)}
+                  {FONT_WEIGHT_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                 </select>
                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
               </div>
@@ -211,7 +211,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
               onClick={saveToLibrary}
               className="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-xl text-[10px] font-black flex items-center gap-2 uppercase tracking-wider hover:bg-blue-100 transition-colors"
             >
-               <Save className="w-3 h-3" /> Save Lib
+               <Save className="w-3 h-3" /> Save
             </button>
           </div>
           
@@ -240,7 +240,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                     onClick={() => handleUpdateWallpaper(url)}
                     className={`w-14 h-20 rounded-xl overflow-hidden border-2 transition-all ${appState.wallpaper.url === url ? 'border-blue-600 scale-105 shadow-md' : 'border-transparent shadow-sm'}`}
                   >
-                    <img src={url} className="w-full h-full object-cover" alt="Saved wallpaper" />
+                    <img src={url} className="w-full h-full object-cover" alt="Saved Wallpaper" />
                   </button>
                   <button 
                     onClick={(e) => removeFromLibrary(url, e)}
@@ -262,14 +262,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
               onClick={handleAddNotification}
               className="bg-slate-900 text-white px-5 py-2.5 rounded-2xl text-[11px] font-black flex items-center gap-2 uppercase tracking-widest shadow-lg hover:bg-slate-800 transition-all active:scale-95"
             >
-              <Plus className="w-4 h-4" /> Add New
+              <Plus className="w-4 h-4" /> Add Notif.
             </button>
           </div>
 
           <div className="space-y-6">
             {appState.notifications.map((notif) => (
               <div key={notif.id} className="bg-white border border-slate-100 rounded-[32px] p-6 shadow-sm relative group hover:shadow-md transition-shadow">
-                {/* Delete Button */}
                 <button 
                   onClick={() => handleDeleteNotification(notif.id)}
                   className="absolute -top-2 -right-2 bg-red-50 text-red-500 p-2 rounded-full shadow-sm hover:bg-red-500 hover:text-white transition-colors border border-red-100 opacity-0 group-hover:opacity-100"
@@ -278,7 +277,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                 </button>
 
                 <div className="flex gap-4">
-                  {/* Icon Column - Matches smaller notification icon size */}
                   <div className="w-[72px] flex-shrink-0 flex flex-col gap-2">
                     <div className="relative w-full aspect-square rounded-[20px] overflow-hidden bg-slate-100 group/icon">
                       <ImageInput 
@@ -290,7 +288,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                          <span className="text-[8px] font-black text-white uppercase tracking-tighter">Change</span>
                       </div>
                     </div>
-                    {/* Toggle Contact/App */}
                     <div className="flex bg-slate-100 p-1 rounded-xl">
                       <button 
                         onClick={() => handleUpdateNotification(notif.id, 'isContact', false)}
@@ -307,7 +304,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                     </div>
                   </div>
 
-                  {/* Fields Column */}
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-2">
                       <div className="flex-1 relative">
@@ -353,12 +349,11 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                       onChange={(e) => handleUpdateNotification(notif.id, 'message', e.target.value)}
                       className="w-full bg-slate-50 border border-slate-100 p-3 rounded-xl text-xs font-medium resize-none outline-none focus:ring-1 focus:ring-blue-100"
                     />
-                    {/* Action Buttons Row */}
                     <div className="flex gap-2 pt-1">
                       <div className="flex-1 relative">
                         <input 
                           type="text" 
-                          placeholder="ADD BUTTON TEXT..."
+                          placeholder="BUTTON TEXT..."
                           value={newActionInput[notif.id] || ''}
                           onChange={(e) => setNewActionInput(prev => ({ ...prev, [notif.id]: e.target.value }))}
                           onKeyDown={(e) => e.key === 'Enter' && handleAddAction(notif.id)}
@@ -371,7 +366,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                            <Plus className="w-4 h-4" />
                         </button>
                       </div>
-                      {/* Current Actions Display */}
                       <div className="flex gap-1 overflow-x-auto no-scrollbar max-w-[100px]">
                         {(notif.actions || []).map((action, idx) => (
                           <div key={idx} className="bg-slate-100 px-2 py-1 rounded-lg text-[8px] font-black text-slate-500 whitespace-nowrap flex items-center gap-1">
