@@ -38,6 +38,7 @@ const PhonePreview: React.FC<PhonePreviewProps> = ({ appState }) => {
   return (
     <div className="relative w-full max-w-[380px] aspect-[9/19.5] mx-auto bg-black rounded-[55px] border-[12px] border-black shadow-[0_0_0_4px_#333,0_20px_50px_-10px_rgba(0,0,0,0.5)] overflow-hidden">
       
+      {/* EXPORT CONTAINER */}
       <div id="lock-screen-preview" className="relative h-full w-full bg-black overflow-hidden select-none">
         
         {/* Background Image */}
@@ -73,8 +74,11 @@ const PhonePreview: React.FC<PhonePreviewProps> = ({ appState }) => {
               {formattedDate}
             </div>
             <h1 
-              className="text-white text-[96px] leading-none tracking-tight drop-shadow-xl font-[Inter]"
-              style={{ fontWeight: fontSettings.clockWeight }}
+              className="text-white text-[96px] leading-none tracking-tight drop-shadow-xl"
+              style={{ 
+                fontWeight: fontSettings.clockWeight,
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+              }}
             >
               {formattedTime}
             </h1>
@@ -97,12 +101,12 @@ const PhonePreview: React.FC<PhonePreviewProps> = ({ appState }) => {
         </div>
       </div>
 
-      {/* Flashlight & Camera Icons */}
-      <div className="absolute inset-0 pointer-events-none z-30">
-         <div className="absolute bottom-12 left-12 w-[50px] h-[50px] bg-black/40 backdrop-blur-xl rounded-full flex items-center justify-center text-white border border-white/5 shadow-lg active:scale-95 transition-transform">
+      {/* Flashlight & Camera Icons (Excluded from Export) */}
+      <div className="absolute inset-0 pointer-events-none z-30 exclude-from-export">
+         <div className="absolute bottom-12 left-12 w-[50px] h-[50px] bg-black/40 backdrop-blur-xl rounded-full flex items-center justify-center text-white border border-white/5 shadow-lg active:scale-95 transition-transform pointer-events-auto">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6c0 2.21-1.79 4-4 4H10c-2.21 0-4-1.79-4-4V2h12v4z"/><path d="M6 6v5l5 11h2l5-11V6H6z"/></svg>
          </div>
-         <div className="absolute bottom-12 right-12 w-[50px] h-[50px] bg-black/40 backdrop-blur-xl rounded-full flex items-center justify-center text-white border border-white/5 shadow-lg active:scale-95 transition-transform">
+         <div className="absolute bottom-12 right-12 w-[50px] h-[50px] bg-black/40 backdrop-blur-xl rounded-full flex items-center justify-center text-white border border-white/5 shadow-lg active:scale-95 transition-transform pointer-events-auto">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
          </div>
       </div>

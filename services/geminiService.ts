@@ -45,7 +45,7 @@ export const generateWallpaper = async (
   imageSize: ImageSize
 ): Promise<string> => {
   // Always create new instance right before use to catch the latest injected API key
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT' });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const fullPrompt = `
     Create a realistic, candid smartphone photo. 
@@ -80,7 +80,7 @@ export const generateWallpaper = async (
 };
 
 export const generateProfileIcon = async (name: string): Promise<string> => {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT' });
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
     try {
         const response = await ai.models.generateContent({
@@ -111,7 +111,7 @@ export const sendChatMessage = async (
     newImage?: string
 ) => {
     // Using Gemini 3 Flash for the best free-tier performance
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT' });
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
     const historyParts = await Promise.all(previousHistory.map(async (msg) => {
         const parts: any[] = [{ text: msg.text }];

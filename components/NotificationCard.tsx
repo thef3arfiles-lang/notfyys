@@ -14,7 +14,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
     return regex.test(str) && str.length <= 4;
   };
 
-  const hasStack = data.badge && data.badge > 0;
+  const hasStack = data.badge && data.badge > 1;
   const isDataUrl = (url: string) => url.startsWith('data:');
 
   // Colors based on Dark/Light mode
@@ -39,7 +39,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
     <div className="relative w-full mb-1.5 group select-none">
       
       {/* Stack Effect */}
-      {hasStack && data.badge && data.badge > 1 && (
+      {hasStack && (
         <>
             <div 
                 className="absolute top-3 left-[8px] right-[8px] h-full rounded-[18px] scale-[0.92] translate-y-2 z-0 shadow-sm border border-white/5" 
@@ -59,7 +59,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
       >
         <div className="p-3 flex gap-3 items-center">
           
-          {/* Left: App Icon (Reduced size to 34px) */}
+          {/* Left: App Icon */}
           <div className="relative flex-shrink-0 self-start">
              <div className={`relative w-[34px] h-[34px] overflow-hidden ${data.isContact ? 'rounded-full' : 'rounded-[8px]'}`}>
                 {isEmoji(data.icon) ? (
@@ -78,9 +78,9 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
                 )}
              </div>
              
-             {/* Stack Badge - Top Right, Neutral Color (No Red) */}
-             {hasStack && (
-                 <div className="absolute -top-1.5 -right-1.5 w-[16px] h-[16px] bg-neutral-800/90 text-white text-[9px] font-bold flex items-center justify-center rounded-full border border-white/10 shadow-sm z-20">
+             {/* iOS Style Red Notification Counter */}
+             {data.badge && data.badge > 0 && (
+                 <div className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[#ff3b30] text-white text-[10px] font-black flex items-center justify-center rounded-full border border-white/10 shadow-lg z-20">
                      {data.badge}
                  </div>
              )}
