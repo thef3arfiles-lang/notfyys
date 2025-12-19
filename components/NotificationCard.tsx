@@ -14,15 +14,15 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
     return regex.test(str) && str.length <= 4;
   };
 
+  // Only show stack if badge is greater than 1
   const hasStack = data.badge && data.badge > 1;
   const isDataUrl = (url: string) => url.startsWith('data:');
 
   // Colors based on Dark/Light mode
   const textColor = aesthetics.isDark ? 'text-white' : 'text-black';
   const secondaryTextColor = aesthetics.isDark ? 'text-gray-300' : 'text-gray-500';
-  const bgColor = aesthetics.isDark ? 'rgba(30, 30, 30,' : 'rgba(242, 242, 247,'; // Base RGB
+  const bgColor = aesthetics.isDark ? 'rgba(30, 30, 30,' : 'rgba(242, 242, 247,'; 
 
-  // Dynamic styles
   const cardStyle: React.CSSProperties = {
     backgroundColor: `${bgColor} ${aesthetics.cardOpacity / 100})`,
     backdropFilter: `blur(${aesthetics.blurIntensity}px)`,
@@ -38,7 +38,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
   return (
     <div className="relative w-full mb-1.5 group select-none">
       
-      {/* Stack Effect */}
+      {/* Visual Stack Effect */}
       {hasStack && (
         <>
             <div 
@@ -52,15 +52,14 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
         </>
       )}
 
-      {/* Main Card */}
+      {/* Main Notification Card */}
       <div 
         className="relative z-10 w-full overflow-hidden rounded-[18px] shadow-sm border border-white/10 transition-transform active:scale-[0.99]"
         style={cardStyle}
       >
         <div className="p-3 flex gap-3 items-center">
           
-          {/* Left: App Icon */}
-          <div className="relative flex-shrink-0 self-start">
+          <div className="relative flex-shrink-0 self-start z-10">
              <div className={`relative w-[34px] h-[34px] overflow-hidden ${data.isContact ? 'rounded-full' : 'rounded-[8px]'}`}>
                 {isEmoji(data.icon) ? (
                     <div className="w-full h-full bg-gray-500/20 flex items-center justify-center text-lg">
@@ -78,7 +77,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
                 )}
              </div>
              
-             {/* iOS Style Red Notification Counter */}
+             {/* iOS Style Red Notification Counter (Only show if > 0) */}
              {data.badge && data.badge > 0 && (
                  <div className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[#ff3b30] text-white text-[10px] font-black flex items-center justify-center rounded-full border border-white/10 shadow-lg z-20">
                      {data.badge}
@@ -86,7 +85,6 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
              )}
           </div>
 
-          {/* Middle: Content */}
           <div className="flex-1 min-w-0 flex flex-col justify-center">
              <div className="flex justify-between items-baseline mb-0.5">
                 <h3 className={`text-[14px] font-bold leading-tight truncate pr-2 ${textColor}`}>
@@ -104,37 +102,10 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data, messageFontWe
                 >
                     {data.message}
                 </p>
-                
-                {/* Right: Attachment Thumbnail */}
-                {data.attachmentImage && (
-                    <div className="flex-shrink-0 w-[34px] h-[34px] rounded-[8px] overflow-hidden bg-gray-500/20">
-                         <img 
-                            src={data.attachmentImage} 
-                            className="w-full h-full object-cover" 
-                            alt="Attachment" 
-                            {...(!isDataUrl(data.attachmentImage) ? { crossOrigin: "anonymous" } : {})}
-                            referrerPolicy="no-referrer"
-                        />
-                    </div>
-                )}
              </div>
           </div>
           
         </div>
-        
-        {/* Actions (if any) */}
-        {data.actions && data.actions.length > 0 && (
-            <div className="px-3 pb-3 pt-0 flex gap-2">
-                {data.actions.map((action, idx) => (
-                <button 
-                    key={idx} 
-                    className={`flex-1 ${aesthetics.isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/5 hover:bg-black/10 text-black'} text-[13px] font-medium py-2 px-3 rounded-xl transition-colors text-center shadow-sm`}
-                >
-                    {action}
-                </button>
-                ))}
-            </div>
-        )}
       </div>
     </div>
   );

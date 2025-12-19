@@ -16,7 +16,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
   const [newActionInput, setNewActionInput] = useState<{ [key: string]: string }>({});
   const [library, setLibrary] = useState<string[]>([]);
 
-  // Load library from local storage on mount
   useEffect(() => {
     const saved = localStorage.getItem('ios_maker_library');
     if (saved) {
@@ -48,20 +47,25 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
     if (!element) return;
     
     setIsDownloading(true);
+    // Give the UI a tiny moment to settle
+    await new Promise(r => setTimeout(r, 100));
+
     try {
-      // Stabilized export options:
-      // cacheBust: true ensures wallpapers load correctly
-      // style: { transform: 'none' } ensures the clock/layout isn't distorted by parent scaling
+      // The key to fixing "bugged" exports with html-to-image is 
+      // ensuring the target element isn't actively being scaled by CSS.
       const dataUrl = await toPng(element, { 
         pixelRatio: 3, 
         backgroundColor: '#000000',
-        cacheBust: true,
+        cacheBust: true, // Fixes missing wallpaper/images
         style: {
-          transform: 'none',
+          transform: 'none', // Critical: resets any parent scaling
           borderRadius: '0',
-          margin: '0'
+          margin: '0',
+          width: '380px', // Force consistent internal width for export
+          height: '823px'  // Force consistent internal height (9/19.5 aspect)
         },
-        filter: (node: any) => !(node instanceof HTMLElement && node.classList.contains('exclude-from-export'))
+        // Wait for all images to be fully loaded into the canvas
+        includeQueryParams: true,
       });
       
       const link = document.createElement('a');
@@ -99,7 +103,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
       icon: SOCIAL_PRESETS[0].icon,
       isContact: false,
       actions: [],
-      badge: 1 // Default badge to 1 for visibility
+      badge: 1
     };
     setAppState(prev => ({
       ...prev,
@@ -138,7 +142,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
 
   return (
     <div className="h-full flex flex-col bg-white overflow-hidden font-sans border-l border-gray-200 shadow-2xl">
-      {/* Header */}
       <div className="px-8 py-6 flex items-center justify-between border-b border-gray-50">
         <div className="flex items-center gap-3">
           <Smartphone className="w-6 h-6 text-blue-600" />
@@ -153,8 +156,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-8 pb-12 space-y-10">
-        
-        {/* Main Export Button */}
         <button 
           onClick={handleDownload}
           disabled={isDownloading}
@@ -164,7 +165,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
           DOWNLOAD IMAGE
         </button>
 
-        {/* Section: Appearance */}
         <section>
           <h2 className="text-[11px] font-black tracking-[0.2em] text-slate-400 uppercase mb-6">Appearance</h2>
           <div className="bg-slate-50/80 rounded-3xl p-6 border border-slate-200 shadow-sm">
@@ -182,7 +182,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
           </div>
         </section>
 
-        {/* Section: Typography */}
         <section>
           <h2 className="text-[11px] font-black tracking-[0.2em] text-slate-400 uppercase mb-6">Typography</h2>
           <div className="grid grid-cols-2 gap-4">
@@ -215,7 +214,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
           </div>
         </section>
 
-        {/* Section: Background */}
         <section>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-[11px] font-black tracking-[0.2em] text-slate-400 uppercase">Background</h2>
@@ -243,7 +241,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
              </div>
           </div>
 
-          {/* Library Quick Access */}
           {library.length > 0 && (
             <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 pt-1">
               {library.map((url, idx) => (
@@ -266,7 +263,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
           )}
         </section>
 
-        {/* Section: Notifications */}
         <section>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-[11px] font-black tracking-[0.2em] text-slate-400 uppercase">Notifications</h2>
@@ -299,20 +295,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                       <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover/icon:opacity-100 transition-opacity pointer-events-none">
                          <span className="text-[8px] font-black text-white uppercase tracking-tighter">Change</span>
                       </div>
-                    </div>
-                    <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
-                      <button 
-                        onClick={() => handleUpdateNotification(notif.id, 'isContact', false)}
-                        className={`flex-1 py-1.5 flex justify-center rounded-lg ${!notif.isContact ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}`}
-                      >
-                         <div className="w-3.5 h-3.5 border-2 border-current rounded-sm"></div>
-                      </button>
-                      <button 
-                        onClick={() => handleUpdateNotification(notif.id, 'isContact', true)}
-                        className={`flex-1 py-1.5 flex justify-center rounded-lg ${notif.isContact ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400'}`}
-                      >
-                         <div className="w-3.5 h-3.5 bg-current rounded-full"></div>
-                      </button>
                     </div>
                   </div>
 
@@ -352,7 +334,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                         type="number" 
                         value={notif.badge}
                         placeholder="Qty"
-                        onChange={(e) => handleUpdateNotification(notif.id, 'badge', parseInt(e.target.value))}
+                        onChange={(e) => handleUpdateNotification(notif.id, 'badge', parseInt(e.target.value) || 0)}
                         className="w-16 bg-slate-50 border border-slate-200 p-3 rounded-xl text-xs font-bold text-center outline-none shadow-sm"
                       />
                     </div>
@@ -378,14 +360,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ appState, setAppState }) =>
                         >
                            <Plus className="w-4 h-4" />
                         </button>
-                      </div>
-                      <div className="flex gap-1 overflow-x-auto no-scrollbar max-w-[100px]">
-                        {(notif.actions || []).map((action, idx) => (
-                          <div key={idx} className="bg-slate-100 px-2 py-1 rounded-lg text-[8px] font-black text-slate-500 whitespace-nowrap flex items-center gap-1 border border-slate-200">
-                             {action}
-                             <X className="w-2 h-2 cursor-pointer" onClick={() => handleUpdateNotification(notif.id, 'actions', notif.actions.filter((_, i) => i !== idx))} />
-                          </div>
-                        ))}
                       </div>
                     </div>
                   </div>
