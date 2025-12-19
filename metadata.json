@@ -1,0 +1,5 @@
+{
+  "name": "iOS Lock Screen Gen",
+  "description": "A customizable iOS lock screen generator with Gemini-powered wallpaper and notification creation.",
+  "requestFramePermissions": []
+}
